@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-
+import Home from "../screens/home/Home";
 import Details from "./details/Details";
 
 class Controller extends Component {
@@ -17,11 +17,11 @@ class Controller extends Component {
       <Router>
         <div className="main-container">
           <Switch>
-            <Route
-              exact
-              path="/"
-              render={props => <Details {...props} baseUrl={this.baseUrl} />}
-            />
+           <Route
+            exact
+            path="/"
+            render={props => <Home {...props} baseUrl={this.baseUrl} />}
+           />
             <Route
               exact
               path="/restaurant/:id"

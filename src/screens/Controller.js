@@ -35,7 +35,7 @@ class Controller extends Component {
               exact
               path="/checkout"
               render={props =>
-                hasLogin ? (
+                sessionStorage.getItem("access-token") !== null ? (
                   <Checkout {...props} baseUrl={this.baseUrl} />
                 ) : (
                   <Redirect

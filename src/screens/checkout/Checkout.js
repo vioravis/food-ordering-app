@@ -141,6 +141,8 @@ class Checkout extends Component {
             paymentModes: [],
             addresses: [],
         }
+
+        this.confirmOrderHandler=this.confirmOrderHandler.bind(this);
     }
 
     componentWillMount() {
@@ -347,17 +349,17 @@ class Checkout extends Component {
         let parameters;
         let itemQuantities;
 
-        if (this.props.location.cartItems === undefined) {
+        if (this.props.location.state.cartItems === undefined) {
             that.setState({
                 open: true,
                 orderNotificationMessage: "Unable to place your order! Please try again!"
             });
             return;
         } else {
-            this.props.location.cartItems.map(item => {
+            this.props.location.state.cartItems.itemList.map(data => {
                 this.state.cartItems.push({
-                    "itemId": item.id,
-                    "quantity": item.quantity
+                    "itemId": data.item.id,
+                    "quantity": data.quantity
                 });
             });
 
@@ -373,7 +375,7 @@ class Checkout extends Component {
         if (address.id !== "") {
             parameters = "addressId=" + address.id +
                 "&paymentId=" + Number(this.state.paymentId) +
-                "&bill=" + this.props.location.totalCartItemsValue;
+                "&bill=" + this.props.location.state.totalCartItemsValue;
 
         } else {
             parameters = "flatBuilNo=" + address.flatBuilNo +
@@ -382,7 +384,7 @@ class Checkout extends Component {
                 "&zipcode=" + address.zipcode +
                 "&stateId=" + address.state.id +
                 "&paymentId=" + Number(this.state.paymentId) +
-                "&bill=" + this.props.location.totalCartItemsValue;
+                "&bill=" + this.props.location.state.totalCartItemsValue;
 
         }
 
@@ -390,18 +392,23 @@ class Checkout extends Component {
         console.log("order placed body : " + itemQuantities);
 
         xhr.addEventListener("readystatechange", function () {
-            if (this.readyState === 4 && this.status === 200) {
+            if (this.readyState === 4) {
+                if(this.status === 200){
                 that.setState({
                     open: true,
                     orderNotificationMessage: "Your order placed successfully! Your order ID is " + this.responseText
                 });
             }
+
             else {
                 that.setState({
                     open: true,
                     orderNotificationMessage: "Unable to place your order! Please try again!"
                 });
             }
+            
+            }
+          
         });
 
         xhr.open("POST", this.props.baseUrl + resourcePath3 + "?" + parameters);
@@ -415,7 +422,7 @@ class Checkout extends Component {
         const {classes} = this.props;
         const steps = getSteps();
         const {activeStep} = this.state;
-        const {cartItems, totalCartItemsValue} = this.props.location;
+        const {cartItems, totalCartItemsValue} = this.props.location.state;
         let paymentModes = this.state.paymentModes;
         return (
             <div className="checkout">
@@ -490,7 +497,7 @@ class Checkout extends Component {
                                                         <div style={{marginBottom: '100px'}}>
                                                             <Typography style={{color: 'grey', fontSize: '18px'}}>There
                                                                 are no saved addresses! You can save an address using
-                                                                your ‘Profile’ menu option.</Typography>
+                                                                the "New Address" tab or using your ‘Profile’ menu option.</Typography>
                                                         </div>
                                                 )}
                                                 {this.state.tabValue === 1 &&
@@ -612,7 +619,7 @@ class Checkout extends Component {
                         <div className={this.state.orderPlaced}>
                             {activeStep === steps.length && (
                                 <Paper square elevation={0} className={classes.resetContainer}>
-                                    <Typography>View the summary and place your order now!</Typography>
+                                    <Typography>View the summary & place your order now!</Typography>
                                     <Button onClick={this.handleReset} className={classes.button}>CHANGE</Button>
                                 </Paper>
                             )}
@@ -628,15 +635,15 @@ class Checkout extends Component {
                                 </Typography>
                                 {console.log(cartItems)}
                                 {console.log(totalCartItemsValue)}
-                                {cartItems !== undefined && cartItems.map(item => (
-                                    <div className="order-body-container" key={"item" + item.id}>
-                                        <div className="div-container div-items">{item.item_type === 'Veg' &&
+                                {cartItems !== undefined && cartItems.itemList.map(data => (
+                                    <div className="order-body-container" key={"item" + data.item.id}>
+                                        <div className="div-container div-items">{data.item.item_type === 'Veg' &&
                                         <FontAwesomeIcon icon="circle" className="veg-item-color"/>}
-                                            {item.item_type === 'Non-Veg' &&
-                                            <FontAwesomeIcon icon="circle" className="non-veg-color"/>} {item.item_name}
+                                            {data.item.item_type === 'Non-Veg' &&
+                                            <FontAwesomeIcon icon="circle" className="non-veg-color"/>} {data.item.item_name}
                                         </div>
-                                        <div className="div-container"> {item.quantity}</div>
-                                        <div className="div-container"><FontAwesomeIcon icon="rupee-sign"/> {item.price * item.quantity}
+                                        <div className="div-container"> {data.quantity}</div>
+                                        <div className="div-container"><FontAwesomeIcon icon="rupee-sign"/> {data.totalItemPrice}
                                         </div>
                                     </div>
                                 ))}
@@ -646,7 +653,7 @@ class Checkout extends Component {
                                     <span style={{fontWeight: 'bold'}}
                                           className="div-container div-items">Net Amount </span>
                                     <span className="rupee-container"><FontAwesomeIcon
-                                        icon="rupee-sign"/> {totalCartItemsValue}</span>
+                                        icon="rupee-sign"/> {cartItems.totalPrice}</span>
                                 </div>
                                 <br/>
                                 <Button className="button-container"  variant="contained"

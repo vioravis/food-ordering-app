@@ -212,7 +212,8 @@ const styles = theme => ({
          }     
          addedCartItem.itemList[index] = findItem;
          // Update cartItems in component state
-        this.setState({ cartItems: addedCartItem});    
+        this.setState({ cartItems: addedCartItem});
+        console.log(addCartItem);    
     }
 
     /**
@@ -234,7 +235,11 @@ const styles = theme => ({
                 // redirect to checkout page and passing cart items to checkout page
                 this.props.history.push({
                     pathname: "/checkout",
-                    state: { cartDetail: this.state.cartItems}
+                    state: { cartItems: this.state.cartItems,
+                            totalCartItemsValue:this.state.totalPrice }
+                    
+                    // cartItems: this.state.cartItems,
+                    // totalCartItemsValue: this.state.totalCartItemsValue
                   })   
             }
         }

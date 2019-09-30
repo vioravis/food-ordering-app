@@ -406,7 +406,7 @@ class Checkout extends Component {
 
         xhr.open("POST", this.props.baseUrl + resourcePath3 + "?" + parameters);
         xhr.setRequestHeader("Content-Type", "application/json")
-        xhr.setRequestHeader("accessToken", "Bearer " + sessionStorage.getItem("access-token"));
+        xhr.setRequestHeader("authorization", "Bearer " + sessionStorage.getItem("access-token"));
         xhr.send(itemQuantities);
 
     }

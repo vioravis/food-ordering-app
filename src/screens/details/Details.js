@@ -3,6 +3,7 @@ import './Details.css';
 import Container from '@material-ui/core/Container';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
+import Header from '../../common/header/Header';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
@@ -69,7 +70,8 @@ const styles = theme => ({
                             totalPrice: 0, 
                             totalItemCount: 0
                         },
-            loggedIn: sessionStorage.getItem("access-token") == null ? false : true
+            loggedIn: sessionStorage.getItem("access-token") == null ? false : true,
+            hasAPIError: false
         }
     }
 
@@ -78,7 +80,7 @@ const styles = theme => ({
      */
     componentDidMount() {
         const { match: { params } } = this.props;
-        this.getRestaurantDetails('params.id');
+        this.getRestaurantDetails(params.id);
     }
 
     /**
@@ -103,13 +105,15 @@ const styles = theme => ({
                 cartItems : tempCartItems
             }); 
         } else {
+            //reading data from stub for testing in case backend API has any error
             const data = details;
             that.setState({
                 restaurant : data
             }); 
             tempCartItems.restaurant = data;
             that.setState({
-                cartItems : tempCartItems
+                cartItems : tempCartItems,
+                hasAPIError: true
             }); 
         }
         }
@@ -262,11 +266,14 @@ const styles = theme => ({
      * @description - render method of component
      */
     render() {
-        let restaurant = this.state.restaurant;
-        let cartItems = this.state.cartItems;
+        let {restaurant, cartItems, hasAPIError} = this.state;
         const { classes } = this.props;
         return (
-            <div className="details">            
+            <div className="details">   
+            <Header
+                    showSearchBox={false}
+                />
+                {hasAPIError && <h1>Backend Server Down!!! Showing testdata!!!</h1>}         
                 {restaurant !== null && (
                     <div className={classes.root}>
                         <Paper className={classes.paper}>

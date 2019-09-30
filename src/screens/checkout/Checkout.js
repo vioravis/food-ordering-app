@@ -167,20 +167,13 @@ class Checkout extends Component {
                 }
             });
 			
-			//let aToken = "eyJraWQiOiIyODcyMjk2MC1hZmJiLTRmODYtOTM3ZS1lMTAyMmYwZWE1NDUiLCJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJhdWQiOiI4ZGI5YTBjNC0zNDk3LTRjZmMtOWVkMS1iZjU5ODg4OGQwNmQiLCJpc3MiOiJodHRwczovL0Zvb2RPcmRlcmluZ0FwcC5pbyIsImV4cCI6MTU2OTcwOSwiaWF0IjoxNTY5NjgwfQ.e--6O3IzU4qJH5wUtxKb9dPcMOQzP8nakDWnSjkOMWmj9QB-5ouGIPlDGn8SFfd7yEIdgri2t5FkYSq4pRbbvQ";
-            //2134567890:Paasdfsa12342###    
-            var user = {"access-token":'eyJraWQiOiIxYzUyZGU3NS1lNDYzLTRlMjUtYmM3Ny04MDBhYjlkYTU2MTMiLCJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJhdWQiOiI4OTFmNmQ0Ni05YmQ1LTRmOWUtYTJkMC0wOGI5MDdmOTNhZTgiLCJpc3MiOiJodHRwczovL0Zvb2RPcmRlcmluZ0FwcC5pbyIsImV4cCI6MTU2OTc1NCwiaWF0IjoxNTY5NzI1fQ.hj3WwTtyhzlZ7koxnxxjsOzQdISN30YZyjWBHcx2YX5Hv7nxkc8G3bz9zsZC1wCrt6j0K4inBV8YE-qtHFTcoA'};
-            sessionStorage.setItem('user', JSON.stringify(user["access-token"]));
-            console.log(user);
+
             xhr.open( "GET", this.props.baseUrl + resourcePath );
-            var access_token = sessionStorage.getItem("user").slice(1,-1)
-            xhr.setRequestHeader("authorization", "Bearer " + sessionStorage.getItem(access_token));
-            //xhr.setRequestHeader("Cache-Control", "no-cache");
-			//xhr.setRequestHeader("accessToken", "Bearer " + aToken);
-            //xhr.setRequestHeader("Content-Type", "application/json")
-            //xhr.setRequestHeader("Accept", "application/json");
-            console.log(sessionStorage.getItem("user"));
-            xhr.send();
+            xhr.setRequestHeader("authorization", "Bearer " + sessionStorage.getItem("access-token"));
+            xhr.setRequestHeader("Content-Type", "application/json");
+           
+            xhr.send(data);
+
 
             xhr1.addEventListener("readystatechange", function () {
                 console.log(this.responseText);
@@ -413,7 +406,7 @@ class Checkout extends Component {
 
         xhr.open("POST", this.props.baseUrl + resourcePath3 + "?" + parameters);
         xhr.setRequestHeader("Content-Type", "application/json")
-        xhr.setRequestHeader("accessToken", "Bearer " + sessionStorage.getItem("access-token"));
+        xhr.setRequestHeader("authorization", "Bearer " + sessionStorage.getItem("access-token"));
         xhr.send(itemQuantities);
 
     }

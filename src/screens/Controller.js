@@ -28,9 +28,9 @@ class Controller extends Component {
               path="/restaurant/:id"
               render={props => <Details {...props} baseUrl={this.baseUrl} />}
             />
-             <Route
+            <Route
               exact
-              path="/"
+              path="/checkout"
               render={props => <Checkout {...props} baseUrl={this.baseUrl} />}
             />
           </Switch>

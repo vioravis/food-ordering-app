@@ -360,6 +360,7 @@ class Header extends Component {
             anchorEl: null,
             loggedIn: false
         });
+        this.props.history.push('/');
     }
 
     render() {

@@ -372,7 +372,9 @@ class Header extends Component {
 
                     {/* header app logo */}
                     <div className='app-logo'>
-                        <FastFoodIcon id='fast-food-icon' fontSize='large' />
+                        <Link to="/" className="app-logo"> 
+                            <FastFoodIcon id='fast-food-icon' fontSize='large' />
+                        </Link>
                     </div>
 
                     {/* header search box */}
